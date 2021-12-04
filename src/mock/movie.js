@@ -1,4 +1,5 @@
 import {getRandomInteger} from '../utils';
+import dayjs from 'dayjs';
 
 const actors = [
   'Carole Lombard',
@@ -76,6 +77,21 @@ const getRandomElement = (array) => {
   return array[integer];
 };
 
+const getRuntime = () => {
+  const hour = getRandomInteger(1, 3);
+  const minute = getRandomInteger(0, 59);
+
+  return dayjs().hour(hour).minute(minute).format('H[h] m[m]');
+};
+
+const getRelease = () => {
+  const year = getRandomInteger(1920, 1960);
+  const month = getRandomInteger(1, 12);
+  const day = getRandomInteger(1, 28);
+
+  return dayjs().day(day).month(month).year(year).format('DD MMMM YYYY');
+}
+
 const getArrayOfElements = (elements, minCount = 1, maxCount = 5) => {
   const count = getRandomInteger(minCount, maxCount);
   const randomElement = new Array(count)
@@ -112,6 +128,8 @@ export const getMovie = () => {
     description: new Array(stringsCount).fill('').map(() => getRandomElement(strings)).join(' '),
     comments: new Array(commentsCount).fill('').map(() => getCommentId()),
     age: getRandomElement(ages),
+    release: getRelease(),
+    runtime: getRuntime(),
     genres: getArrayOfElements(genres, 1, 4),
     director: getRandomElement(directors),
     writers: getArrayOfElements(writers, 1, 4),
