@@ -77,6 +77,13 @@ const getRandomElement = (array) => {
   return array[integer];
 };
 
+const getRating = () => {
+  const integer = getRandomInteger(0, 10);
+  const decimalPoint = getRandomInteger(0, 10);
+
+  return `${integer}.${decimalPoint}`;
+};
+
 const getRuntime = () => {
   const hour = getRandomInteger(1, 3);
   const minute = getRandomInteger(0, 59);
@@ -89,8 +96,8 @@ const getRelease = () => {
   const month = getRandomInteger(1, 12);
   const day = getRandomInteger(1, 28);
 
-  return dayjs().day(day).month(month).year(year).format('DD MMMM YYYY');
-}
+  return dayjs().day(day).month(month).year(year);
+};
 
 const getArrayOfElements = (elements, minCount = 1, maxCount = 5) => {
   const count = getRandomInteger(minCount, maxCount);
@@ -103,16 +110,14 @@ const getArrayOfElements = (elements, minCount = 1, maxCount = 5) => {
 
 const getMovieId = () => {
   movieIdCount++;
-  const prefix = 'movie_';
 
-  return prefix + movieIdCount;
+  return `movie_${movieIdCount}`;
 };
 
 const getCommentId = () => {
   commentIdCount++;
-  const prefix = 'comment_';
 
-  return prefix + commentIdCount;
+  return `comment_${commentIdCount}`;
 };
 
 export const getMovie = () => {
@@ -127,7 +132,8 @@ export const getMovie = () => {
     poster: posters[name],
     description: new Array(stringsCount).fill('').map(() => getRandomElement(strings)).join(' '),
     comments: new Array(commentsCount).fill('').map(() => getCommentId()),
-    age: getRandomElement(ages),
+    ageRating: getRandomElement(ages),
+    rating: getRating(),
     release: getRelease(),
     runtime: getRuntime(),
     genres: getArrayOfElements(genres, 1, 4),
