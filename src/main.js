@@ -9,6 +9,7 @@ import {createExtraContainerTemplate} from './view/extra-contaner';
 import {createStatsTemplate} from './view/stats';
 import {createDetailModal} from './view/detail-modal';
 import {getMovie} from './mock/movie';
+import {FIRST} from './const';
 
 const CARD_IN_LIST_COUNT = 5;
 const CARD_IN_EXTRA_COUNT = 2;
@@ -52,4 +53,4 @@ const footer = document.querySelector('.footer');
 const statisticsContainerElement = footer.querySelector('.footer__statistics');
 
 renderTemplate(statisticsContainerElement, createStatsTemplate(), RenderPosition.BEFOREEND);
-renderTemplate(footer, createDetailModal(), RenderPosition.AFTEREND);
+renderTemplate(footer, createDetailModal(movies[FIRST]), RenderPosition.AFTEREND);
