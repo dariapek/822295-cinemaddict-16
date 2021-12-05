@@ -8,6 +8,7 @@ import {createShowMoreButtonTemplate} from './view/show-more-button';
 import {createExtraContainerTemplate} from './view/extra-contaner';
 import {createStatsTemplate} from './view/stats';
 import {createDetailModal} from './view/detail-modal';
+import {getMovie} from './mock/movie';
 
 const CARD_IN_LIST_COUNT = 5;
 const CARD_IN_EXTRA_COUNT = 2;
@@ -15,12 +16,14 @@ const EXTRA_CONTAINER_COUNT = 2;
 const FIRST_EXTRA_CONTAINER = 0;
 const SECOND_EXTRA_CONTAINER = 1;
 
+const movies = Array.from({length: CARD_IN_LIST_COUNT}, getMovie);
+
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 
 const createSomeFilmCards = (cont, container) => {
   for (let i = 0; i < cont; i++) {
-    renderTemplate(container, createCardTemplate(), RenderPosition.BEFOREEND);
+    renderTemplate(container, createCardTemplate(movies[i]), RenderPosition.BEFOREEND);
   }
 };
 

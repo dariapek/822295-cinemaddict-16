@@ -105,7 +105,7 @@ const getArrayOfElements = (elements, minCount = 1, maxCount = 5) => {
     .fill('')
     .map(() => getRandomElement(elements));
 
-  return new Set(randomElement);
+  return Array.from(new Set(randomElement));
 };
 
 const getMovieId = () => {
