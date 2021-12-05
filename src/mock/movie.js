@@ -1,4 +1,4 @@
-import {getRandomInteger} from '../utils';
+import {getRandomElement, getRandomInteger, getText} from '../utils';
 import dayjs from 'dayjs';
 
 const actors = [
@@ -48,19 +48,6 @@ const posters = {
   'The great flamarion': 'the-great-flamarion.jpg',
   'The man with the golden arm': 'the-man-with-the-golden-arm.jpg',
 };
-const strings = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus varius viverra.',
-  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
-  'Sed sed nisi sed augue convallis suscipit in sed felis.',
-  'Aliquam erat volutpat.',
-  'Nunc fermentum tortor ac porta dapibus.',
-  'In rutrum ac purus sit amet tempus.',
-];
 const writers = [
   'Lindsley Parsons',
   'Will Beale',
@@ -70,12 +57,6 @@ const writers = [
 ];
 let movieIdCount = 0;
 let commentIdCount = 0;
-
-const getRandomElement = (array) => {
-  const integer = getRandomInteger(0, array.length - 1);
-
-  return array[integer];
-};
 
 const getRating = () => {
   const integer = getRandomInteger(0, 10);
@@ -88,7 +69,7 @@ const getRuntime = () => {
   const hour = getRandomInteger(1, 3);
   const minute = getRandomInteger(0, 59);
 
-  return dayjs().hour(hour).minute(minute).format('H[h] m[m]');
+  return dayjs().hour(hour).minute(minute);
 };
 
 const getRelease = () => {
@@ -121,8 +102,7 @@ const getCommentId = () => {
 };
 
 export const getMovie = () => {
-  const stringsCount = getRandomInteger(1, 5);
-  const commentsCount = getRandomInteger(1, 5);
+  const commentsCount = getRandomInteger(0, 5);
   const name = getRandomElement(names);
 
   return {
@@ -130,8 +110,8 @@ export const getMovie = () => {
     name,
     originalName: name,
     poster: posters[name],
-    description: new Array(stringsCount).fill('').map(() => getRandomElement(strings)).join(' '),
-    comments: new Array(commentsCount).fill('').map(() => getCommentId()),
+    description: getText(1, 5),
+    commentsIds: new Array(commentsCount).fill('').map(() => getCommentId()),
     ageRating: getRandomElement(ages),
     rating: getRating(),
     release: getRelease(),

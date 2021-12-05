@@ -9,6 +9,7 @@ import {createExtraContainerTemplate} from './view/extra-contaner';
 import {createStatsTemplate} from './view/stats';
 import {createDetailModal} from './view/detail-modal';
 import {getMovie} from './mock/movie';
+import {getComments} from './mock/comments';
 import {FIRST} from './const';
 
 const CARD_IN_LIST_COUNT = 5;
@@ -18,6 +19,8 @@ const FIRST_EXTRA_CONTAINER = 0;
 const SECOND_EXTRA_CONTAINER = 1;
 
 const movies = Array.from({length: CARD_IN_LIST_COUNT}, getMovie);
+const commentsIds = [].concat(...movies.map((movie) => (movie.commentsIds)));
+const comments = getComments(commentsIds);
 
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
@@ -53,4 +56,4 @@ const footer = document.querySelector('.footer');
 const statisticsContainerElement = footer.querySelector('.footer__statistics');
 
 renderTemplate(statisticsContainerElement, createStatsTemplate(), RenderPosition.BEFOREEND);
-renderTemplate(footer, createDetailModal(movies[FIRST]), RenderPosition.AFTEREND);
+renderTemplate(footer, createDetailModal(movies[FIRST], comments), RenderPosition.AFTEREND);

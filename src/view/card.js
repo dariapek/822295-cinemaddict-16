@@ -23,10 +23,20 @@ const getShortDescription = (description) => {
 };
 
 export const createCardTemplate = (movie) => {
-  const {name, rating, release, runtime, genres, poster, description, comments} = movie;
+  const {
+    name,
+    rating,
+    release,
+    runtime,
+    genres,
+    poster,
+    description,
+    commentsIds
+  } = movie;
   const year = release.get('year');
+  const formattedRuntime = runtime.format('H[h] m[m]');
   const shortDescription = getShortDescription(description);
-  const commentLength = getCommentLength(comments);
+  const commentLength = getCommentLength(commentsIds);
 
   return `
     <article class="film-card">
@@ -35,7 +45,7 @@ export const createCardTemplate = (movie) => {
         <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
           <span class="film-card__year">${year}</span>
-          <span class="film-card__duration">${runtime}</span>
+          <span class="film-card__duration">${formattedRuntime}</span>
           <span class="film-card__genre">${genres[FIRST]}</span>
         </p>
         <img src="./images/posters/${poster}" alt="" class="film-card__poster">
