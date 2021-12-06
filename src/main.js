@@ -1,6 +1,6 @@
 import {renderTemplate, RenderPosition} from './render.js';
 import {createUserProfileTemplate} from './view/user-profile';
-import {createFiltersTemplate} from './view/menu';
+import {createFiltersTemplate} from './view/filters';
 import {createSortTemplate} from './view/sort';
 import {createListTemplate} from './view/list';
 import {createCardTemplate} from './view/card';
