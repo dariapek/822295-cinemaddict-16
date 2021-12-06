@@ -31,7 +31,10 @@ export const createCardTemplate = (movie) => {
     genres,
     poster,
     description,
-    commentsIds
+    commentsIds,
+    isWatched,
+    isFavorite,
+    inWatchlist,
   } = movie;
   const year = release.get('year');
   const formattedRuntime = runtime.format('H[h] m[m]');
@@ -53,9 +56,9 @@ export const createCardTemplate = (movie) => {
         <span class="film-card__comments">${commentLength}</span>
       </a>
       <div class="film-card__controls">
-        <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
-        <button class="film-card__controls-item film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
-        <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
+        <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${inWatchlist ? 'film-card__controls-item--active' : ''}" type="button">Add to watchlist</button>
+        <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${isWatched ? 'film-card__controls-item--active' : ''}" type="button">Mark as watched</button>
+        <button class="film-card__controls-item film-card__controls-item--favorite ${isFavorite ? 'film-card__controls-item--active' : ''}" type="button">Mark as favorite</button>
       </div>
     </article>`;
 };

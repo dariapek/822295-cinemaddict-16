@@ -31,7 +31,7 @@ const createSomeFilmCards = (cont, container) => {
   }
 };
 
-renderTemplate(headerElement, createUserProfileTemplate(), RenderPosition.BEFOREEND);
+renderTemplate(headerElement, createUserProfileTemplate(movies), RenderPosition.BEFOREEND);
 renderTemplate(mainElement, createMenuTemplate(), RenderPosition.BEFOREEND);
 renderTemplate(mainElement, createSortTemplate(), RenderPosition.BEFOREEND);
 renderTemplate(mainElement, createListTemplate(), RenderPosition.BEFOREEND);

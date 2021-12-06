@@ -121,6 +121,9 @@ export const getMovie = () => {
     writers: getArrayOfElements(writers, 1, 4),
     actors: getArrayOfElements(actors, 1, 7),
     country: getRandomElement(countries),
+    isWatched: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
+    inWatchlist: Boolean(getRandomInteger(0, 1)),
   };
 };
 
