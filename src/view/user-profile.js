@@ -4,10 +4,15 @@ const USER_RATING = {
   MOVIE_BUFF: 'movie buff',
 };
 
+const RATING_MAX_COUNT = {
+  NOVICE: 10,
+  FAN: 20,
+};
+
 const getUserRating = (count) => {
-  if (count < 11) {
+  if (count <= RATING_MAX_COUNT.NOVICE) {
     return USER_RATING.NOVICE;
-  } else if (count < 21) {
+  } else if (count <= RATING_MAX_COUNT.FAN) {
     return USER_RATING.FAN;
   } else {
     return USER_RATING.MOVIE_BUFF;

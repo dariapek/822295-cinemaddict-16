@@ -5,7 +5,7 @@ const FILTER = {
   favorites: 'Favorites',
 };
 
-const getFiltersTemplate = (filters) =>
+const getNavigationItem = (filters) =>
   filters.map((filter) => {
     if (filter.name === 'all') {
       return `<a
@@ -24,7 +24,7 @@ const getFiltersTemplate = (filters) =>
   }).join(' ');
 
 export const createFiltersTemplate = (filters) => {
-  const filtersBlock = getFiltersTemplate(filters);
+  const filtersBlock = getNavigationItem(filters);
 
   return `
     <nav class="main-navigation">

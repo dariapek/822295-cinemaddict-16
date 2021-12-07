@@ -10,8 +10,8 @@ import {createStatsTemplate} from './view/stats';
 import {createDetailModal} from './view/detail-modal';
 import {getMovie} from './mock/movie';
 import {getComments} from './mock/comments';
-import {FIRST} from './const';
 import {getFilters} from './mock/filters';
+import {START_INDEX} from './const';
 
 const CARD_IN_LIST_COUNT = 45;
 const MOVIE_COUNT_PER_STEP = 5;
@@ -58,7 +58,7 @@ const footer = document.querySelector('.footer');
 const statisticsContainerElement = footer.querySelector('.footer__statistics');
 
 renderTemplate(statisticsContainerElement, createStatsTemplate(movies), RenderPosition.BEFOREEND);
-renderTemplate(footer, createDetailModal(movies[FIRST], comments), RenderPosition.AFTEREND);
+renderTemplate(footer, createDetailModal(movies[START_INDEX], comments), RenderPosition.AFTEREND);
 
 if (movies.length > MOVIE_COUNT_PER_STEP) {
   let renderedTaskCount = MOVIE_COUNT_PER_STEP;

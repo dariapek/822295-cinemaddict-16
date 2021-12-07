@@ -55,7 +55,7 @@ const writers = [
   'Frank Ryan',
   'Rose Franken',
 ];
-let movieIdCount = 0;
+let movieCount = 0;
 let commentIdCount = 0;
 
 const getRating = () => {
@@ -90,9 +90,9 @@ const getArrayOfElements = (elements, minCount = 1, maxCount = 5) => {
 };
 
 const getMovieId = () => {
-  movieIdCount++;
+  movieCount++;
 
-  return `movie_${movieIdCount}`;
+  return `movie_${movieCount}`;
 };
 
 const getCommentId = () => {

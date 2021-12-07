@@ -1,4 +1,4 @@
-import {STRINGS} from './const';
+import {RANDOM_STRINGS} from './const';
 
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -16,5 +16,5 @@ export const getRandomElement = (array) => {
 export const getText = (min, max) => {
   const stringsCount = getRandomInteger(min, max);
 
-  return new Array(stringsCount).fill('').map(() => getRandomElement(STRINGS)).join(' ');
+  return new Array(stringsCount).fill('').map(() => getRandomElement(RANDOM_STRINGS)).join(' ');
 };

@@ -1,4 +1,4 @@
-export const STRINGS = [
+export const RANDOM_STRINGS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
   'Fusce tristique felis at fermentum pharetra.',
@@ -12,4 +12,4 @@ export const STRINGS = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-export const FIRST = 0;
+export const START_INDEX = 0;

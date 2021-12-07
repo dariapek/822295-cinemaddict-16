@@ -1,4 +1,4 @@
-import {FIRST} from '../const';
+import {START_INDEX} from '../const';
 
 const getCommentLength = (comments) => {
   const length = comments.length;
@@ -16,8 +16,8 @@ const getShortDescription = (description) => {
     return description;
   }
 
-  const last = descriptionArr[MAX_LENGTH] === ('.' || ' ' || ',') ? 138 : 139;
-  const shortDescription = description.slice(FIRST, last);
+  const last = descriptionArr[MAX_LENGTH] === ('.' || ' ' || ',') ? MAX_LENGTH - 1 : MAX_LENGTH;
+  const shortDescription = description.slice(START_INDEX, last);
 
   return `${shortDescription}…`;
 };
@@ -49,7 +49,7 @@ export const createCardTemplate = (movie) => {
         <p class="film-card__info">
           <span class="film-card__year">${year}</span>
           <span class="film-card__duration">${formattedRuntime}</span>
-          <span class="film-card__genre">${genres[FIRST]}</span>
+          <span class="film-card__genre">${genres[START_INDEX]}</span>
         </p>
         <img src="./images/posters/${poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${shortDescription}</p>
