@@ -73,9 +73,16 @@ const getRuntime = () => {
 };
 
 const getRelease = () => {
-  const year = getRandomInteger(1920, 1960);
-  const month = getRandomInteger(1, 12);
-  const day = getRandomInteger(1, 28);
+  const minYear = 1960;
+  const maxYear = 1960;
+  const minMonth = 1;
+  const maxMonth = 12;
+  const minDay = 1;
+  const maxDay = 28;
+
+  const year = getRandomInteger(minYear, maxYear);
+  const month = getRandomInteger(minMonth, maxMonth);
+  const day = getRandomInteger(minDay, maxDay);
 
   return dayjs().day(day).month(month).year(year);
 };
