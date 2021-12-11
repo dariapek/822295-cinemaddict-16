@@ -116,8 +116,7 @@ const createDetailModal = (movie, currentMovieComments) => {
     ? getComments(currentMovieComments)
     : '';
 
-  return `
-  <section class="film-details">
+  return `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
         <div class="film-details__top-container">
           <div class="film-details__close">
@@ -215,7 +214,8 @@ export default class DetailModalView {
   #currentComments = null;
 
   constructor(movie = {}, comments = []) {
-    this.update(movie, comments);
+    this.#movie = movie;
+    this.#currentComments = this.getCurrentMovieComments(comments);
   }
 
   get element() {
@@ -226,13 +226,15 @@ export default class DetailModalView {
     return this.#element;
   }
 
-  get template() {
-    return createDetailModal(this.#movie, this.#currentComments);
-  }
-
-  update(movie, comments) {
+  set element(value) {
+    const {movie, comments} = value;
     this.#movie = movie;
     this.#currentComments = this.getCurrentMovieComments(comments);
+    this.#element = createElement(this.template);
+  }
+
+  get template() {
+    return createDetailModal(this.#movie, this.#currentComments);
   }
 
   getCurrentMovieComments(allComments) {
