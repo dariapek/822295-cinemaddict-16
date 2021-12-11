@@ -1,3 +1,5 @@
+import {createElement} from '../render';
+
 const USER_RATING = {
   NOVICE: 'novice',
   FAN: 'fan',
@@ -23,11 +25,33 @@ export const createUserProfileTemplate = (movies) => {
   const watchedMoviesCount = movies.filter((movie) => (movie.isWatched)).length;
   const userRatingTitle = watchedMoviesCount > 0 ? getUserRating(watchedMoviesCount) : '';
 
-  return `
-    <section class="header__profile profile">
-      <p class="profile__rating">${userRatingTitle}</p>
-      <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    </section>`;
+  return `<section class="header__profile profile">
+            <p class="profile__rating">${userRatingTitle}</p>
+            <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+          </section>`;
 };
 
+export default class UserProfileView {
+  #element = null;
+  #movie = null;
 
+  constructor(movie) {
+    this.#movie = movie;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createUserProfileTemplate(this.#movie);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

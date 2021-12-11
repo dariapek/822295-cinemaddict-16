@@ -1,6 +1,6 @@
 import {createElement} from '../render';
 
-export const createStatsTemplate = (movies) => (
+const createStatsTemplate = (movies) => (
   `<p>${movies.length} movies inside</p>`
 );
 
