@@ -20,6 +20,7 @@ const commentsIds = [].concat(...movies.map((movie) => (movie.commentsIds)));
 const comments = getComments(commentsIds);
 const filters = getFilters(movies);
 
+const body = document.querySelector('body');
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footer = document.querySelector('.footer');
@@ -34,17 +35,38 @@ render(statisticsContainerElement, new StatsView(movies).element, RenderPosition
 const filmElement = document.querySelector('.films');
 const filmListElement = filmElement.querySelector('.films-list');
 const filmContainerElement = filmListElement.querySelector('.films-list__container');
-const modal = new DetailModalView().element;
+const modalComponent = new DetailModalView();
 
 const renderMovie = (movie, container) => {
-  const movieElement = new MovieCardView(movie).element;
-  render(container, movieElement, RenderPosition.BEFOREEND);
+  const movieComponent = new MovieCardView(movie);
+  const movieElement = movieComponent.element;
+  const card = movieElement.closest('.film-card');
 
-  const card = movieElement.querySelector('.film-card');
+  const openModal = (modalElement) => {
+    body.classList.add('hide-overflow');
+    body.appendChild(modalElement);
+  }
+
+  const closeModal = (modalElement) => {
+    body.classList.remove('hide-overflow');
+    body.removeChild(modalElement);
+  };
 
   card.addEventListener('click', () => {
-    render(footer, modal.update(movie, comments), RenderPosition.AFTEREND);
+    modalComponent.element = {movie, comments};
+    const modalElement = modalComponent.element;
+    const closeButton = modalElement.querySelector('.film-details__close-btn');
+
+    const onClose = () => {
+      closeModal(modalElement);
+      closeButton.removeEventListener('click', onClose);
+    }
+
+    closeButton.addEventListener('click', onClose);
+    openModal(modalElement);
   });
+
+  render(container, movieElement, RenderPosition.BEFOREEND);
 };
 
 const renderMovieList = () => {
@@ -74,7 +96,7 @@ const renderMovieList = () => {
       evt.preventDefault();
       movies
         .slice(renderedTaskCount, renderedTaskCount + MOVIE_COUNT_PER_STEP)
-        .forEach((movie) => render(filmContainerElement, new MovieCardView(movie).element, RenderPosition.BEFOREEND));
+        .forEach((movie) => renderMovie(movie, filmContainerElement));
 
       renderedTaskCount += MOVIE_COUNT_PER_STEP;
 
