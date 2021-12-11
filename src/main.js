@@ -45,7 +45,7 @@ const renderMovie = (movie, container) => {
   const openModal = (modalElement) => {
     body.classList.add('hide-overflow');
     body.appendChild(modalElement);
-  }
+  };
 
   const closeModal = (modalElement) => {
     body.classList.remove('hide-overflow');
@@ -60,7 +60,7 @@ const renderMovie = (movie, container) => {
     const onClose = () => {
       closeModal(modalElement);
       closeButton.removeEventListener('click', onClose);
-    }
+    };
 
     closeButton.addEventListener('click', onClose);
     openModal(modalElement);
