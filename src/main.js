@@ -77,13 +77,13 @@ const renderMovieList = () => {
 
   const titlesForExtraContainer = getExtraContainerTitle();
 
-  const createSomeFilmCards = (cont, container) => {
+  const createFilmCards = (cont, container) => {
     for (let i = 0; i < cont; i++) {
       renderMovie(movies[i], container);
     }
   };
 
-  createSomeFilmCards(MOVIE_COUNT_PER_STEP, filmContainerElement);
+  createFilmCards(MOVIE_COUNT_PER_STEP, filmContainerElement);
 
   if (movies.length > MOVIE_COUNT_PER_STEP) {
     let renderedTaskCount = MOVIE_COUNT_PER_STEP;
@@ -113,8 +113,8 @@ const renderMovieList = () => {
 
   const extraContainersElement = filmElement.querySelectorAll('.films-list--extra .films-list__container');
 
-  createSomeFilmCards(CARD_IN_EXTRA_COUNT, extraContainersElement[FIRST_EXTRA_CONTAINER]);
-  createSomeFilmCards(CARD_IN_EXTRA_COUNT, extraContainersElement[SECOND_EXTRA_CONTAINER]);
+  createFilmCards(CARD_IN_EXTRA_COUNT, extraContainersElement[FIRST_EXTRA_CONTAINER]);
+  createFilmCards(CARD_IN_EXTRA_COUNT, extraContainersElement[SECOND_EXTRA_CONTAINER]);
 };
 
 renderMovieList();
