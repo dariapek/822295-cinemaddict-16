@@ -57,12 +57,21 @@ const renderMovie = (movie, container) => {
     const modalElement = modalComponent.element;
     const closeButton = modalElement.querySelector('.film-details__close-btn');
 
-    const onClose = () => {
+    const onClickClose = () => {
       closeModal(modalElement);
-      closeButton.removeEventListener('click', onClose);
+      closeButton.removeEventListener('click', onClickClose);
     };
 
-    closeButton.addEventListener('click', onClose);
+    const onEscClose = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        closeModal(modalElement);
+        document.removeEventListener('keydown', onEscClose);
+      }
+    };
+
+    closeButton.addEventListener('click', onClickClose);
+    document.addEventListener('keydown', onEscClose);
     openModal(modalElement);
   });
 
