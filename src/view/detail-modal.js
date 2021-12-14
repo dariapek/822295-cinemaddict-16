@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {createElement} from '../render';
 
 const getStringOfElements = (elements) => (elements.join(', '));
 
@@ -97,24 +98,25 @@ const getInfo = (movie) => {
     </div>`;
 };
 
-export const createDetailModal = (movie, allComments) => {
+const createDetailModal = (movie, currentMovieComments) => {
+  if (Object.keys(movie).length === 0) {
+    return;
+  }
+
   const {
     ageRating,
     poster,
-    commentsIds,
     isWatched,
     isFavorite,
     inWatchlist,
   } = movie;
   const infoBlock = getInfo(movie);
-  const currentMovieComments = allComments.filter((comment) => (commentsIds.includes(comment.id)));
   const commentsCount = currentMovieComments.length;
   const commentsBlock = commentsCount > 0
     ? getComments(currentMovieComments)
     : '';
 
-  return `
-  <section class="film-details">
+  return `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
         <div class="film-details__top-container">
           <div class="film-details__close">
@@ -205,3 +207,43 @@ export const createDetailModal = (movie, allComments) => {
       </form>
     </section>`;
 };
+
+export default class DetailModalView {
+  #element = null;
+  #movie = null;
+  #currentComments = null;
+
+  constructor(movie = {}, comments = []) {
+    this.#movie = movie;
+    this.#currentComments = this.getCurrentMovieComments(comments);
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  set element(value) {
+    const {movie, comments} = value;
+    this.#movie = movie;
+    this.#currentComments = this.getCurrentMovieComments(comments);
+    this.#element = createElement(this.template);
+  }
+
+  get template() {
+    return createDetailModal(this.#movie, this.#currentComments);
+  }
+
+  getCurrentMovieComments(allComments) {
+    const {commentsIds} = this.#movie;
+
+    return allComments.filter((comment) => (commentsIds.includes(comment.id)));
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

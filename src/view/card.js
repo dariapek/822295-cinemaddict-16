@@ -1,4 +1,5 @@
 import {START_INDEX} from '../const';
+import {createElement} from '../render';
 
 const getCommentLength = (comments) => {
   const length = comments.length;
@@ -22,7 +23,7 @@ const getShortDescription = (description) => {
   return `${shortDescription}…`;
 };
 
-export const createCardTemplate = (movie) => {
+const createCardTemplate = (movie) => {
   const {
     name,
     rating,
@@ -41,8 +42,7 @@ export const createCardTemplate = (movie) => {
   const shortDescription = getShortDescription(description);
   const commentLength = getCommentLength(commentsIds);
 
-  return `
-    <article class="film-card">
+  return `<article class="film-card">
       <a class="film-card__link">
         <h3 class="film-card__title">${name}</h3>
         <p class="film-card__rating">${rating}</p>
@@ -63,3 +63,27 @@ export const createCardTemplate = (movie) => {
     </article>`;
 };
 
+export default class MovieCardView {
+  #element = null;
+  #movie = null;
+
+  constructor(movie) {
+    this.#movie = movie;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createCardTemplate(this.#movie);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
