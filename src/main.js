@@ -1,41 +1,104 @@
 import {render, RenderPosition} from './render.js';
-import UserProfileView from './view/user-profile';
+import {START_INDEX} from "./const";
+import DetailModalView from './view/detail-modal';
+import ExtraContainerView from './view/extra-container';
 import FiltersView from './view/filters';
 import SortView from './view/sort';
 import ListView from './view/list';
 import MovieCardView from './view/card';
 import ShowMoreButtonView from './view/show-more-button';
 import StatsView from './view/stats';
+import UserProfileView from './view/user-profile';
 import {getMovie} from './mock/movie';
 import {getComments} from './mock/comments';
 import {getFilters} from './mock/filters';
-import ExtraContainerView from './view/extra-container';
 import {getExtraContainerTitle} from './mock/extra-title';
-import DetailModalView from './view/detail-modal';
 
-const CARD_IN_LIST_COUNT = 45;
-
+const CARD_IN_LIST_COUNT = 9;
 const movies = Array.from({length: CARD_IN_LIST_COUNT}, getMovie);
 const commentsIds = [].concat(...movies.map((movie) => (movie.commentsIds)));
 const comments = getComments(commentsIds);
 const filters = getFilters(movies);
 
 const body = document.querySelector('body');
-const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
-const footer = document.querySelector('.footer');
-const statisticsContainerElement = footer.querySelector('.footer__statistics');
-
-render(headerElement, new UserProfileView(movies).element, RenderPosition.BEFOREEND);
-render(mainElement, new FiltersView(filters).element, RenderPosition.BEFOREEND);
-render(mainElement, new SortView().element, RenderPosition.BEFOREEND);
-render(mainElement, new ListView().element, RenderPosition.BEFOREEND);
-render(statisticsContainerElement, new StatsView(movies).element, RenderPosition.BEFOREEND);
-
-const filmElement = document.querySelector('.films');
-const filmListElement = filmElement.querySelector('.films-list');
-const filmContainerElement = filmListElement.querySelector('.films-list__container');
 const modalComponent = new DetailModalView();
+
+const renderPage = () => {
+  const headerElement = document.querySelector('.header');
+  const footer = document.querySelector('.footer');
+  const statisticsContainerElement = footer.querySelector('.footer__statistics');
+
+  render(headerElement, new UserProfileView(movies).element, RenderPosition.BEFOREEND);
+  render(mainElement, new FiltersView(filters).element, RenderPosition.BEFOREEND);
+  render(statisticsContainerElement, new StatsView(movies).element, RenderPosition.BEFOREEND);
+}
+
+const renderList = () => {
+  if (movies.length) {
+    render(mainElement, new SortView().element, RenderPosition.BEFOREEND);
+  }
+
+  const listElement = new ListView(movies).element;
+  const films = listElement.closest('.films');
+  const moviesContainer = films.querySelector('.films-list__container');
+
+  render(mainElement, listElement, RenderPosition.BEFOREEND);
+
+  if (movies.length) {
+    renderMovies(moviesContainer);
+    renderExtras(films);
+  }
+};
+
+const renderMovies = (container) => {
+  const MOVIE_COUNT_PER_STEP = 5;
+
+  movies
+    .slice(START_INDEX, MOVIE_COUNT_PER_STEP)
+    .forEach((movie) => renderMovie(movie, container));
+
+  if (movies.length > MOVIE_COUNT_PER_STEP) {
+    let renderedMovieCount = MOVIE_COUNT_PER_STEP;
+
+    const showMoreButtonElement = new ShowMoreButtonView().element
+
+    render(container, showMoreButtonElement, RenderPosition.AFTEREND);
+
+    showMoreButtonElement.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      movies
+        .slice(renderedMovieCount, renderedMovieCount + MOVIE_COUNT_PER_STEP)
+        .forEach((movie) => renderMovie(movie, container));
+
+      renderedMovieCount += MOVIE_COUNT_PER_STEP;
+
+      if (renderedMovieCount >= movies.length) {
+        showMoreButtonElement.remove();
+      }
+    });
+  }
+};
+
+const renderExtras = (container) => {
+  const CARD_IN_EXTRA_COUNT = 2;
+  const FIRST_EXTRA_CONTAINER = 0;
+  const SECOND_EXTRA_CONTAINER = 1;
+  const titlesForExtraContainer = getExtraContainerTitle();
+
+  titlesForExtraContainer
+    .forEach((title) => (
+      render(container, new ExtraContainerView(title).element, RenderPosition.BEFOREEND))
+    );
+
+  const extraContainersElement = container.querySelectorAll('.films-list--extra .films-list__container');
+
+  movies.slice(START_INDEX, CARD_IN_EXTRA_COUNT)
+    .forEach((movie) => renderMovie(movie, extraContainersElement[FIRST_EXTRA_CONTAINER]));
+
+  movies.slice(START_INDEX, CARD_IN_EXTRA_COUNT)
+    .forEach((movie) => renderMovie(movie, extraContainersElement[SECOND_EXTRA_CONTAINER]));
+};
 
 const renderMovie = (movie, container) => {
   const movieComponent = new MovieCardView(movie);
@@ -78,52 +141,5 @@ const renderMovie = (movie, container) => {
   render(container, movieElement, RenderPosition.BEFOREEND);
 };
 
-const renderMovieList = () => {
-  const MOVIE_COUNT_PER_STEP = 5;
-  const CARD_IN_EXTRA_COUNT = 2;
-  const FIRST_EXTRA_CONTAINER = 0;
-  const SECOND_EXTRA_CONTAINER = 1;
-
-  const titlesForExtraContainer = getExtraContainerTitle();
-
-  const createFilmCards = (cont, container) => {
-    for (let i = 0; i < cont; i++) {
-      renderMovie(movies[i], container);
-    }
-  };
-
-  createFilmCards(MOVIE_COUNT_PER_STEP, filmContainerElement);
-
-  if (movies.length > MOVIE_COUNT_PER_STEP) {
-    let renderedTaskCount = MOVIE_COUNT_PER_STEP;
-
-    render(filmListElement, new ShowMoreButtonView().element, RenderPosition.BEFOREEND);
-
-    const loadMoreButton = filmListElement.querySelector('.films-list__show-more');
-
-    loadMoreButton.addEventListener('click', (evt) => {
-      evt.preventDefault();
-      movies
-        .slice(renderedTaskCount, renderedTaskCount + MOVIE_COUNT_PER_STEP)
-        .forEach((movie) => renderMovie(movie, filmContainerElement));
-
-      renderedTaskCount += MOVIE_COUNT_PER_STEP;
-
-      if (renderedTaskCount >= movies.length) {
-        loadMoreButton.remove();
-      }
-    });
-  }
-
-  titlesForExtraContainer
-    .forEach((title) => (
-      render(filmElement, new ExtraContainerView(title).element, RenderPosition.BEFOREEND))
-    );
-
-  const extraContainersElement = filmElement.querySelectorAll('.films-list--extra .films-list__container');
-
-  createFilmCards(CARD_IN_EXTRA_COUNT, extraContainersElement[FIRST_EXTRA_CONTAINER]);
-  createFilmCards(CARD_IN_EXTRA_COUNT, extraContainersElement[SECOND_EXTRA_CONTAINER]);
-};
-
-renderMovieList();
+renderPage();
+renderList();
