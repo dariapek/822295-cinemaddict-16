@@ -1,9 +1,15 @@
 import {createElement} from '../render';
 
-const createListTemplate = () => (
+const getTitle = (movies) => (
+  movies.length
+    ? '<h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>'
+    : '<h2 class="films-list__title">There are no movies in our database</h2>'
+);
+
+const createListTemplate = (movies) => (
   `<section class="films">
     <section class="films-list">
-      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+        ${getTitle(movies)}
 
       <div class="films-list__container"></div>
     </section>
@@ -12,6 +18,11 @@ const createListTemplate = () => (
 
 export default class ListView {
   #element = null;
+  #movies = null;
+
+  constructor(movies) {
+    this.#movies = movies;
+  }
 
   get element() {
     if (!this.#element) {
@@ -22,7 +33,7 @@ export default class ListView {
   }
 
   get template() {
-    return createListTemplate();
+    return createListTemplate(this.#movies);
   }
 
   removeElement() {
