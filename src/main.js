@@ -1,5 +1,11 @@
 import {render, RenderPosition} from './render.js';
-import {START_INDEX} from './const';
+import {
+  CARD_IN_LIST_COUNT,
+  START_INDEX,
+  CARD_IN_EXTRA_COUNT,
+  FIRST_EXTRA_CONTAINER,
+  SECOND_EXTRA_CONTAINER,
+} from './const';
 import DetailModalView from './view/detail-modal';
 import ExtraContainerView from './view/extra-container';
 import FiltersView from './view/filters';
@@ -14,7 +20,6 @@ import {getComments} from './mock/comments';
 import {getFilters} from './mock/filters';
 import {getExtraContainerTitle} from './mock/extra-title';
 
-const CARD_IN_LIST_COUNT = 9;
 const movies = Array.from({length: CARD_IN_LIST_COUNT}, getMovie);
 const commentsIds = [].concat(...movies.map((movie) => (movie.commentsIds)));
 const comments = getComments(commentsIds);
@@ -95,9 +100,6 @@ const renderMovies = (container) => {
 };
 
 const renderExtras = (container) => {
-  const CARD_IN_EXTRA_COUNT = 2;
-  const FIRST_EXTRA_CONTAINER = 0;
-  const SECOND_EXTRA_CONTAINER = 1;
   const titlesForExtraContainer = getExtraContainerTitle();
 
   titlesForExtraContainer
