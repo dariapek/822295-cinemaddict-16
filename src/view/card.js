@@ -1,5 +1,5 @@
 import {START_INDEX} from '../const';
-import {createElement} from '../render';
+import AbstractView from "./abstract";
 
 const getCommentLength = (comments) => {
   const length = comments.length;
@@ -63,27 +63,16 @@ const createCardTemplate = (movie) => {
     </article>`;
 };
 
-export default class MovieCardView {
-  #element = null;
+export default class MovieCardView extends AbstractView {
   #movie = null;
 
   constructor(movie) {
+    super();
+
     this.#movie = movie;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createCardTemplate(this.#movie);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

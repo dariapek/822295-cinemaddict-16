@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from "./abstract";
 
 const getTitle = (movies) => (
   movies.length
@@ -16,27 +16,16 @@ const createListTemplate = (movies) => (
   </section>`
 );
 
-export default class ListView {
-  #element = null;
+export default class ListView extends AbstractView {
   #movies = null;
 
   constructor(movies) {
+    super();
+
     this.#movies = movies;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createListTemplate(this.#movies);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

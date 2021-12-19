@@ -45,7 +45,7 @@ const renderMovie = (movie, container) => {
   };
 
   card.addEventListener('click', () => {
-    modalComponent.element = {movie, comments};
+    modalComponent.update({movie, comments});
     const modalElement = modalComponent.element;
     const closeButton = modalElement.querySelector('.film-details__close-btn');
 
