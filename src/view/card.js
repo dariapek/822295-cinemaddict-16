@@ -1,5 +1,5 @@
 import {START_INDEX} from '../const';
-import AbstractView from "./abstract";
+import AbstractView from './abstract';
 
 const getCommentLength = (comments) => {
   const length = comments.length;

@@ -1,4 +1,4 @@
-import AbstractView from "./abstract";
+import AbstractView from './abstract';
 
 const createStatsTemplate = (movies) => (
   `<p>${movies.length} movies inside</p>`

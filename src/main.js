@@ -32,7 +32,6 @@ const modalComponent = new DetailModalView();
 const renderMovie = (movie, container) => {
   const movieComponent = new MovieCardView(movie);
   const movieElement = movieComponent.element;
-  const card = movieElement.closest('.film-card');
 
   const openModal = (modalElement) => {
     body.classList.add('hide-overflow');

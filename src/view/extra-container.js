@@ -1,4 +1,4 @@
-import AbstractView from "./abstract";
+import AbstractView from './abstract';
 
 const createExtraContainerTemplate = (title) => (
   `<section class="films-list films-list--extra">

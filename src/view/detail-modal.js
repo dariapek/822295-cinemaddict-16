@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {createElement} from '../render';
-import AbstractView from "./abstract";
+import AbstractView from './abstract';
 
 const getStringOfElements = (elements) => (elements.join(', '));
 
