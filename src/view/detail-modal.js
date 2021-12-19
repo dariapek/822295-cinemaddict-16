@@ -236,4 +236,18 @@ export default class DetailModalView extends AbstractView {
 
     return allComments.filter((comment) => (commentsIds.includes(comment.id)));
   }
+
+  setCloseHandler = (callback) => {
+    this._callbacks.onCloseClick = callback;
+
+    this.element
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#closeHandler);
+  }
+
+  #closeHandler = (evt) => {
+    evt.preventDefault();
+
+    this._callbacks.onCloseClick();
+  }
 }
