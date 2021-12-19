@@ -1,25 +1,11 @@
-import {createElement} from '../render';
+import AbstractView from './abstract';
 
 const createLoadingTemplate = () => (
   '<h2 class="films-list__title">Loading...</h2>'
 );
 
-export default class LoadingView {
-  #element = null;
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
+export default class LoadingView extends AbstractView {
   get template() {
     return createLoadingTemplate();
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
