@@ -32,7 +32,6 @@ const modalComponent = new DetailModalView();
 const renderMovie = (movie, container) => {
   const movieComponent = new MovieCardView(movie);
   const movieElement = movieComponent.element;
-  const card = movieElement.closest('.film-card');
 
   const openModal = (modalElement) => {
     body.classList.add('hide-overflow');
@@ -44,8 +43,8 @@ const renderMovie = (movie, container) => {
     body.removeChild(modalElement);
   };
 
-  card.addEventListener('click', () => {
-    modalComponent.element = {movie, comments};
+  movieComponent.setClickHandler(() => {
+    modalComponent.update({movie, comments});
     const modalElement = modalComponent.element;
     const closeButton = modalElement.querySelector('.film-details__close-btn');
 
@@ -62,7 +61,8 @@ const renderMovie = (movie, container) => {
       }
     };
 
-    closeButton.addEventListener('click', onClickClose);
+    modalComponent.setCloseHandler(onClickClose);
+
     document.addEventListener('keydown', onEscClose);
     openModal(modalElement);
   });
@@ -80,12 +80,11 @@ const renderMovies = (container) => {
   if (movies.length > MOVIE_COUNT_PER_STEP) {
     let renderedMovieCount = MOVIE_COUNT_PER_STEP;
 
-    const showMoreButtonElement = new ShowMoreButtonView().element;
+    const showMoreButtonComponent = new ShowMoreButtonView();
 
-    render(container, showMoreButtonElement, RenderPosition.AFTEREND);
+    render(container, showMoreButtonComponent, RenderPosition.AFTEREND);
 
-    showMoreButtonElement.addEventListener('click', (evt) => {
-      evt.preventDefault();
+    showMoreButtonComponent.setClickHandle(() => {
       movies
         .slice(renderedMovieCount, renderedMovieCount + MOVIE_COUNT_PER_STEP)
         .forEach((movie) => renderMovie(movie, container));
@@ -93,7 +92,7 @@ const renderMovies = (container) => {
       renderedMovieCount += MOVIE_COUNT_PER_STEP;
 
       if (renderedMovieCount >= movies.length) {
-        showMoreButtonElement.remove();
+        showMoreButtonComponent.element.remove();
       }
     });
   }
@@ -104,7 +103,7 @@ const renderExtras = (container) => {
 
   titlesForExtraContainer
     .forEach((title) => (
-      render(container, new ExtraContainerView(title).element, RenderPosition.BEFOREEND))
+      render(container, new ExtraContainerView(title), RenderPosition.BEFOREEND))
     );
 
   const extraContainersElement = container.querySelectorAll('.films-list--extra .films-list__container');
@@ -121,14 +120,14 @@ const renderPage = () => {
   const footer = document.querySelector('.footer');
   const statisticsContainerElement = footer.querySelector('.footer__statistics');
 
-  render(headerElement, new UserProfileView(movies).element, RenderPosition.BEFOREEND);
-  render(mainElement, new FiltersView(filters).element, RenderPosition.BEFOREEND);
-  render(statisticsContainerElement, new StatsView(movies).element, RenderPosition.BEFOREEND);
+  render(headerElement, new UserProfileView(movies), RenderPosition.BEFOREEND);
+  render(mainElement, new FiltersView(filters), RenderPosition.BEFOREEND);
+  render(statisticsContainerElement, new StatsView(movies), RenderPosition.BEFOREEND);
 };
 
 const renderList = () => {
   if (movies.length) {
-    render(mainElement, new SortView().element, RenderPosition.BEFOREEND);
+    render(mainElement, new SortView(), RenderPosition.BEFOREEND);
   }
 
   const listElement = new ListView(movies).element;

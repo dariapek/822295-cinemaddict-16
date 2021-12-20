@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import {createElement} from '../render';
+import AbstractView from './abstract';
 
 const getStringOfElements = (elements) => (elements.join(', '));
 
@@ -208,33 +209,26 @@ const createDetailModal = (movie, currentMovieComments) => {
     </section>`;
 };
 
-export default class DetailModalView {
-  #element = null;
+export default class DetailModalView extends AbstractView {
   #movie = null;
   #currentComments = null;
 
   constructor(movie = {}, comments = []) {
+    super();
+
     this.#movie = movie;
     this.#currentComments = this.getCurrentMovieComments(comments);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  set element(value) {
-    const {movie, comments} = value;
-    this.#movie = movie;
-    this.#currentComments = this.getCurrentMovieComments(comments);
-    this.#element = createElement(this.template);
   }
 
   get template() {
     return createDetailModal(this.#movie, this.#currentComments);
+  }
+
+  update(value) {
+    const {movie, comments} = value;
+    this.#movie = movie;
+    this.#currentComments = this.getCurrentMovieComments(comments);
+    this.element = createElement(this.template);
   }
 
   getCurrentMovieComments(allComments) {
@@ -243,7 +237,17 @@ export default class DetailModalView {
     return allComments.filter((comment) => (commentsIds.includes(comment.id)));
   }
 
-  removeElement() {
-    this.#element = null;
+  setCloseHandler = (callback) => {
+    this._callbacks.onCloseClick = callback;
+
+    this.element
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#closeHandler);
+  }
+
+  #closeHandler = (evt) => {
+    evt.preventDefault();
+
+    this._callbacks.onCloseClick();
   }
 }
