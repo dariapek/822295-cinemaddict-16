@@ -7,6 +7,7 @@ import {getMovie} from './mock/movie';
 import {getComments} from './mock/comments';
 import {getFilters} from './mock/filters';
 import MovieListPresenter from './presenter/list';
+import SortView from './view/sort';
 
 const movies = Array.from({length: CARD_IN_LIST_COUNT}, getMovie);
 const commentsIds = [].concat(...movies.map((movie) => (movie.commentsIds)));
@@ -23,6 +24,10 @@ const renderPage = () => {
   render(headerElement, new UserProfileView(movies), RenderPosition.BEFOREEND);
   render(mainElement, new FiltersView(filters), RenderPosition.BEFOREEND);
   render(statisticsContainerElement, new StatsView(movies), RenderPosition.BEFOREEND);
+
+  if (movies.length) {
+    render(mainElement, new SortView(), RenderPosition.BEFOREEND);
+  }
 };
 
 renderPage();

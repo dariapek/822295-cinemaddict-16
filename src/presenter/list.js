@@ -117,10 +117,6 @@ export default class MovieListPresenter {
 
   renderList() {
     const mainElement = document.querySelector('.main');
-    if (this.#movies.length) {
-      render(mainElement, new SortView(), RenderPosition.BEFOREEND);
-    }
-
     const listElement = new ListView(this.#movies).element;
     const films = listElement.closest('.films');
     const moviesContainer = films.querySelector('.films-list__container');
