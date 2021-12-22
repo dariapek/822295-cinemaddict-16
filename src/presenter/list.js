@@ -12,9 +12,11 @@ import {
 } from '../const';
 import ShowMoreButtonView from '../view/show-more-button';
 import DetailModalView from '../view/detail-modal';
+import {updateItem} from "../utils";
 
 export default class MovieListPresenter {
   #movies = [];
+  #sourceMovies = [];
   #comments = [];
 
   #modalComponent = new DetailModalView();
@@ -24,6 +26,7 @@ export default class MovieListPresenter {
 
   init = (movies, comments) => {
     this.#movies = movies;
+    this.#sourceMovies = movies;
     this.#comments = comments;
 
     this.renderList();
@@ -43,6 +46,15 @@ export default class MovieListPresenter {
       this.#body.removeChild(modalElement);
     };
 
+    const onControlsClick = (evt) => {
+      const controlType = evt.target.dataset.controlType;
+      const updatedMovie = {...movie, [controlType]: !movie[controlType]};
+
+      this.#updateMovie(updatedMovie);
+    }
+
+    movieComponent.setControlsClickHandler(onControlsClick);
+
     movieComponent.setCardClickHandler(() => {
       this.#modalComponent.update({movie, comments});
       const modalElement = this.#modalComponent.element;
@@ -61,8 +73,6 @@ export default class MovieListPresenter {
         }
       };
 
-      movieComponent.setControlsClickHandler(() => {});
-
       this.#modalComponent.setCloseHandler(onClickClose);
 
       document.addEventListener('keydown', onEscClose);
@@ -70,6 +80,12 @@ export default class MovieListPresenter {
     });
 
     render(container, movieElement, RenderPosition.BEFOREEND);
+  }
+
+  #updateMovie = (updatedMovie) => {
+    this.#movies = updateItem(this.#movies, updatedMovie);
+    this.#sourceMovies = updateItem(this.#movies, updatedMovie);
+
   }
 
   #renderMovies = (container) => {
