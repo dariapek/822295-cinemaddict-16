@@ -1,26 +1,26 @@
 import MovieCardView from '../view/card';
 import {render, RenderPosition} from '../render';
-import SortView from '../view/sort';
 import ListView from '../view/list';
 import {getExtraContainerTitle} from '../mock/extra-title';
 import ExtraContainerView from '../view/extra-container';
-import {CARD_IN_EXTRA_COUNT, FIRST_EXTRA_CONTAINER, SECOND_EXTRA_CONTAINER, START_INDEX} from '../const';
+import {
+  CARD_IN_EXTRA_COUNT,
+  FIRST_EXTRA_CONTAINER,
+  MOVIE_COUNT_PER_STEP,
+  SECOND_EXTRA_CONTAINER,
+  START_INDEX
+} from '../const';
 import ShowMoreButtonView from '../view/show-more-button';
 import DetailModalView from '../view/detail-modal';
 
 export default class MovieListPresenter {
-  #listContainer = null;
-
   #movies = [];
   #comments = [];
 
   #modalComponent = new DetailModalView();
+  #showMoreButtonComponent = new ShowMoreButtonView();
 
   #body = document.querySelector('body');
-
-  constructor(listContainer) {
-    this.#listContainer = listContainer;
-  }
 
   init = (movies, comments) => {
     this.#movies = movies;
@@ -71,8 +71,6 @@ export default class MovieListPresenter {
   }
 
   #renderMovies = (container) => {
-    const MOVIE_COUNT_PER_STEP = 5;
-
     this.#movies
       .slice(START_INDEX, MOVIE_COUNT_PER_STEP)
       .forEach((movie) => this.#renderMovie(movie, this.#comments, container));
@@ -80,11 +78,9 @@ export default class MovieListPresenter {
     if (this.#movies.length > MOVIE_COUNT_PER_STEP) {
       let renderedMovieCount = MOVIE_COUNT_PER_STEP;
 
-      const showMoreButtonComponent = new ShowMoreButtonView();
+      render(container, this.#showMoreButtonComponent, RenderPosition.AFTEREND);
 
-      render(container, showMoreButtonComponent, RenderPosition.AFTEREND);
-
-      showMoreButtonComponent.setClickHandle(() => {
+      this.#showMoreButtonComponent.setClickHandle(() => {
         this.#movies
           .slice(renderedMovieCount, renderedMovieCount + MOVIE_COUNT_PER_STEP)
           .forEach((movie) => this.#renderMovie(movie, this.#comments, container));
@@ -92,7 +88,7 @@ export default class MovieListPresenter {
         renderedMovieCount += MOVIE_COUNT_PER_STEP;
 
         if (renderedMovieCount >= this.#movies.length) {
-          showMoreButtonComponent.element.remove();
+          this.#showMoreButtonComponent.element.remove();
         }
       });
     }
