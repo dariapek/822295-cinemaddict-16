@@ -43,7 +43,7 @@ export default class MovieListPresenter {
       this.#body.removeChild(modalElement);
     };
 
-    movieComponent.setClickHandler(() => {
+    movieComponent.setCardClickHandler(() => {
       this.#modalComponent.update({movie, comments});
       const modalElement = this.#modalComponent.element;
       const closeButton = modalElement.querySelector('.film-details__close-btn');
@@ -60,6 +60,8 @@ export default class MovieListPresenter {
           document.removeEventListener('keydown', onEscClose);
         }
       };
+
+      movieComponent.setControlsClickHandler(() => {});
 
       this.#modalComponent.setCloseHandler(onClickClose);
 
