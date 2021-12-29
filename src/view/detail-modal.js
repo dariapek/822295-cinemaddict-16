@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {createElement} from '../render';
 import AbstractView from './abstract';
-import {controlType} from "../const";
+import {controlType} from '../const';
 
 const getStringOfElements = (elements) => (elements.join(', '));
 

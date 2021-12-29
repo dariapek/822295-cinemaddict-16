@@ -12,7 +12,7 @@ import {
 } from '../const';
 import ShowMoreButtonView from '../view/show-more-button';
 import DetailModalView from '../view/detail-modal';
-import {updateItem} from "../utils";
+import {remove, updateItem} from '../utils';
 
 export default class MovieListPresenter {
   #movies = [];
@@ -31,7 +31,6 @@ export default class MovieListPresenter {
   constructor(changeData) {
     this.#changeData = changeData;
   }
-
 
   init = (movies, comments) => {
     this.#movies = movies;
@@ -59,6 +58,8 @@ export default class MovieListPresenter {
   };
 
   #renderModal = (movie, comments) => {
+    remove(this.#modalComponent);
+
     this.#modalComponent.update({movie, comments});
     const modalElement = this.#modalComponent.element;
     const closeButton = modalElement.querySelector('.film-details__close-btn');
@@ -83,7 +84,7 @@ export default class MovieListPresenter {
       this.renderList();
       this.#removeModal();
       this.#renderModal(updatedMovie, comments);
-    }
+    };
 
     this.#modalComponent.setCloseHandler(onClickClose);
     this.#modalComponent.setControlsClickHandler(onModalControlsClick);
@@ -102,7 +103,7 @@ export default class MovieListPresenter {
       this.#updateMovie(updatedMovie);
       this.#clearList();
       this.renderList();
-    }
+    };
 
     movieComponent.setControlsClickHandler(onCardControlsClick);
     movieComponent.setCardClickHandler(() => (this.#renderModal(movie, comments)));

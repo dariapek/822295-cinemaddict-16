@@ -8,7 +8,7 @@ import {getComments} from '../mock/comments';
 import {getFilters} from '../mock/filters';
 import MovieListPresenter from '../presenter/list';
 import SortView from '../view/sort';
-import {remove} from "../utils";
+import {remove} from '../utils';
 
 export default class MainPresenter {
   #movies = Array.from({length: CARD_IN_LIST_COUNT}, getMovie);

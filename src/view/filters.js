@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {createElement} from "../render";
+import {createElement} from '../render';
 
 const FILTER = {
   all: 'All movies',

@@ -23,4 +23,4 @@ export const controlType = {
   WATCHLIST: 'inWatchlist',
   WATCHED: 'isWatched',
   FAVORITE: 'isFavorite',
-}
+};
