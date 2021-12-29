@@ -115,7 +115,7 @@ export default class MovieCardView extends AbstractView {
   }
 
   setControlsClickHandler = (callback) => {
-    this._callbacks.onControlsClick = callback;
+    this._callbacks.onCardControlsClick = callback;
     this.element
       .querySelector('.film-card__controls')
       .addEventListener('click', this.#controlsClickHandler);
@@ -123,6 +123,6 @@ export default class MovieCardView extends AbstractView {
 
   #controlsClickHandler = (evt) => {
     evt.preventDefault();
-    this._callbacks.onControlsClick(evt);
+    this._callbacks.onCardControlsClick(evt);
   }
 }

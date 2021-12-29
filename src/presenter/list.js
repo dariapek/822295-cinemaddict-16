@@ -16,76 +16,112 @@ import {updateItem} from "../utils";
 
 export default class MovieListPresenter {
   #movies = [];
-  #sourceMovies = [];
+  #sourcedMovies = [];
   #comments = [];
 
   #modalComponent = new DetailModalView();
   #showMoreButtonComponent = new ShowMoreButtonView();
+  #listComponent;
+
+  #changeData;
 
   #body = document.querySelector('body');
+  #filmsContainer;
+
+  constructor(changeData) {
+    this.#changeData = changeData;
+  }
+
 
   init = (movies, comments) => {
     this.#movies = movies;
-    this.#sourceMovies = movies;
+    this.#sourcedMovies = movies;
     this.#comments = comments;
 
+    this.#listComponent = new ListView(this.#movies);
+    this.#filmsContainer = this.#listComponent.element.closest('.films');
+
     this.renderList();
+
+    if (this.#movies.length) {
+      this.#renderExtras(this.#filmsContainer);
+    }
+  }
+
+  #openModal = (modalElement) => {
+    this.#body.classList.add('hide-overflow');
+    this.#body.appendChild(modalElement);
+  };
+
+  #closeModal = (modalElement) => {
+    this.#body.classList.remove('hide-overflow');
+    this.#body.removeChild(modalElement);
+  };
+
+  #renderModal = (movie, comments) => {
+    this.#modalComponent.update({movie, comments});
+    const modalElement = this.#modalComponent.element;
+    const closeButton = modalElement.querySelector('.film-details__close-btn');
+
+    const onClickClose = () => {
+      this.#closeModal(modalElement);
+      closeButton.removeEventListener('click', onClickClose);
+    };
+
+    const onEscClose = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        this.#closeModal(modalElement);
+        document.removeEventListener('keydown', onEscClose);
+      }
+    };
+
+    const onModalControlsClick = (evt) => {
+      const updatedMovie = this.#getUpdatedMovie(evt, movie);
+      this.#updateMovie(updatedMovie);
+      this.#clearList();
+      this.renderList();
+      this.#removeModal();
+      this.#renderModal(updatedMovie, comments);
+    }
+
+    this.#modalComponent.setCloseHandler(onClickClose);
+    this.#modalComponent.setControlsClickHandler(onModalControlsClick);
+
+    document.addEventListener('keydown', onEscClose);
+    this.#openModal(modalElement);
   }
 
   #renderMovie = (movie, comments, container) => {
     const movieComponent = new MovieCardView(movie);
     const movieElement = movieComponent.element;
 
-    const openModal = (modalElement) => {
-      this.#body.classList.add('hide-overflow');
-      this.#body.appendChild(modalElement);
-    };
-
-    const closeModal = (modalElement) => {
-      this.#body.classList.remove('hide-overflow');
-      this.#body.removeChild(modalElement);
-    };
-
-    const onControlsClick = (evt) => {
-      const controlType = evt.target.dataset.controlType;
-      const updatedMovie = {...movie, [controlType]: !movie[controlType]};
+    const onCardControlsClick = (evt) => {
+      const updatedMovie = this.#getUpdatedMovie(evt, movie);
 
       this.#updateMovie(updatedMovie);
+      this.#clearList();
+      this.renderList();
     }
 
-    movieComponent.setControlsClickHandler(onControlsClick);
-
-    movieComponent.setCardClickHandler(() => {
-      this.#modalComponent.update({movie, comments});
-      const modalElement = this.#modalComponent.element;
-      const closeButton = modalElement.querySelector('.film-details__close-btn');
-
-      const onClickClose = () => {
-        closeModal(modalElement);
-        closeButton.removeEventListener('click', onClickClose);
-      };
-
-      const onEscClose = (evt) => {
-        if (evt.key === 'Escape' || evt.key === 'Esc') {
-          evt.preventDefault();
-          closeModal(modalElement);
-          document.removeEventListener('keydown', onEscClose);
-        }
-      };
-
-      this.#modalComponent.setCloseHandler(onClickClose);
-
-      document.addEventListener('keydown', onEscClose);
-      openModal(modalElement);
-    });
+    movieComponent.setControlsClickHandler(onCardControlsClick);
+    movieComponent.setCardClickHandler(() => (this.#renderModal(movie, comments)));
 
     render(container, movieElement, RenderPosition.BEFOREEND);
   }
 
-  #updateMovie = (updatedMovie) => {
-    this.#movies = updateItem(this.#movies, updatedMovie);
-    this.#sourceMovies = updateItem(this.#movies, updatedMovie);
+  #getUpdatedMovie = (evt, movie) => {
+    const controlType = evt.target.dataset.controlType;
 
+    return {...movie, [controlType]: !movie[controlType]};
+  }
+
+  #updateMovie = (updatedMovie) => {
+    const updatedMovies = updateItem(this.#movies, updatedMovie);
+
+    this.#movies = updatedMovies;
+    this.#sourcedMovies = updatedMovies;
+    this.#changeData(updatedMovies);
   }
 
   #renderMovies = (container) => {
@@ -129,17 +165,25 @@ export default class MovieListPresenter {
       .forEach((movie) => this.#renderMovie(movie, this.#comments, extraContainersElement[SECOND_EXTRA_CONTAINER]));
   }
 
+  #clearList = () => {
+    const cards = this.#listComponent.element
+      .querySelector('.films-list')
+      .querySelectorAll('.film-card');
+    cards.forEach((card) => (card.remove()));
+  }
+
+  #removeModal = () => {
+    this.#modalComponent.element.remove();
+  }
+
   renderList() {
     const mainElement = document.querySelector('.main');
-    const listElement = new ListView(this.#movies).element;
-    const films = listElement.closest('.films');
-    const moviesContainer = films.querySelector('.films-list__container');
+    const moviesContainer = this.#filmsContainer.querySelector('.films-list__container');
 
-    render(mainElement, listElement, RenderPosition.BEFOREEND);
+    render(mainElement, this.#listComponent, RenderPosition.BEFOREEND);
 
     if (this.#movies.length) {
       this.#renderMovies(moviesContainer);
-      this.#renderExtras(films);
     }
   }
 }

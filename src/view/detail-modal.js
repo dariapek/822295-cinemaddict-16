@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import {createElement} from '../render';
 import AbstractView from './abstract';
+import {controlType} from "../const";
 
 const getStringOfElements = (elements) => (elements.join(', '));
 
@@ -142,6 +143,7 @@ const createDetailModal = (movie, currentMovieComments) => {
                 ${inWatchlist ? 'film-details__control-button--active' : ''}"
                 id="watchlist"
                 name="watchlist"
+                data-control-type="${controlType.WATCHLIST}"
             >Add to watchlist</button>
             <button
               type="button"
@@ -151,6 +153,7 @@ const createDetailModal = (movie, currentMovieComments) => {
                 ${isWatched ? 'film-details__control-button--active' : ''}"
                 id="watched"
                 name="watched"
+                data-control-type="${controlType.WATCHED}"
             >Already watched</button>
             <button
               type="button"
@@ -160,6 +163,7 @@ const createDetailModal = (movie, currentMovieComments) => {
                 ${isFavorite ? 'film-details__control-button--active' : ''}"
                 id="favorite"
                 name="favorite"
+                data-control-type="${controlType.FAVORITE}"
             >Add to favorites</button>
           </section>
         </div>
@@ -249,5 +253,17 @@ export default class DetailModalView extends AbstractView {
     evt.preventDefault();
 
     this._callbacks.onCloseClick();
+  }
+
+  setControlsClickHandler = (callback) => {
+    this._callbacks.onModalControlsClick = callback;
+    this.element
+      .querySelector('.film-details__controls')
+      .addEventListener('click', this.#controlsClickHandler);
+  }
+
+  #controlsClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callbacks.onModalControlsClick(evt);
   }
 }
