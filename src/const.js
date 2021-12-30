@@ -24,3 +24,9 @@ export const controlType = {
   WATCHED: 'isWatched',
   FAVORITE: 'isFavorite',
 };
+
+export const sortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
