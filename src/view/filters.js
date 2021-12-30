@@ -1,4 +1,5 @@
 import AbstractView from './abstract';
+import {createElement} from '../render';
 
 const FILTER = {
   all: 'All movies',
@@ -47,5 +48,10 @@ export default class FiltersView extends AbstractView {
 
   get template() {
     return createFiltersTemplate(this.#filters);
+  }
+
+  update(filters) {
+    this.#filters = filters;
+    this.element = createElement(this.template);
   }
 }

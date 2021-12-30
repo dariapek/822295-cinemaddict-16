@@ -17,3 +17,10 @@ export const CARD_IN_EXTRA_COUNT = 2;
 export const FIRST_EXTRA_CONTAINER = 0;
 export const SECOND_EXTRA_CONTAINER = 1;
 export const CARD_IN_LIST_COUNT = 9;
+export const MOVIE_COUNT_PER_STEP = 5;
+
+export const controlType = {
+  WATCHLIST: 'inWatchlist',
+  WATCHED: 'isWatched',
+  FAVORITE: 'isFavorite',
+};
