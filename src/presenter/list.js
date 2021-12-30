@@ -16,7 +16,6 @@ import {remove, updateItem} from '../utils';
 
 export default class MovieListPresenter {
   #movies = [];
-  #sourcedMovies = [];
   #comments = [];
 
   #modalComponent = new DetailModalView();
@@ -26,6 +25,7 @@ export default class MovieListPresenter {
   #changeData;
 
   #body = document.querySelector('body');
+  #main = document.querySelector('.main');
   #filmsContainer;
 
   constructor(changeData) {
@@ -34,17 +34,9 @@ export default class MovieListPresenter {
 
   init = (movies, comments) => {
     this.#movies = movies;
-    this.#sourcedMovies = movies;
     this.#comments = comments;
 
-    this.#listComponent = new ListView(this.#movies);
-    this.#filmsContainer = this.#listComponent.element.closest('.films');
-
     this.renderList();
-
-    if (this.#movies.length) {
-      this.#renderExtras(this.#filmsContainer);
-    }
   }
 
   #openModal = (modalElement) => {
@@ -58,7 +50,7 @@ export default class MovieListPresenter {
   };
 
   #renderModal = (movie, comments) => {
-    remove(this.#modalComponent);
+    this.#removeModal();
 
     this.#modalComponent.update({movie, comments});
     const modalElement = this.#modalComponent.element;
@@ -80,7 +72,7 @@ export default class MovieListPresenter {
     const onModalControlsClick = (evt) => {
       const updatedMovie = this.#getUpdatedMovie(evt, movie);
       this.#updateMovie(updatedMovie);
-      this.#clearList();
+      this.clearList();
       this.renderList();
       this.#removeModal();
       this.#renderModal(updatedMovie, comments);
@@ -101,7 +93,7 @@ export default class MovieListPresenter {
       const updatedMovie = this.#getUpdatedMovie(evt, movie);
 
       this.#updateMovie(updatedMovie);
-      this.#clearList();
+      this.clearList();
       this.renderList();
     };
 
@@ -121,7 +113,6 @@ export default class MovieListPresenter {
     const updatedMovies = updateItem(this.#movies, updatedMovie);
 
     this.#movies = updatedMovies;
-    this.#sourcedMovies = updatedMovies;
     this.#changeData(updatedMovies);
   }
 
@@ -166,25 +157,24 @@ export default class MovieListPresenter {
       .forEach((movie) => this.#renderMovie(movie, this.#comments, extraContainersElement[SECOND_EXTRA_CONTAINER]));
   }
 
-  #clearList = () => {
-    const cards = this.#listComponent.element
-      .querySelector('.films-list')
-      .querySelectorAll('.film-card');
-    cards.forEach((card) => (card.remove()));
+  #removeModal = () => {
+    remove(this.#modalComponent);
   }
 
-  #removeModal = () => {
-    this.#modalComponent.element.remove();
+  clearList = () => {
+    remove(this.#listComponent);
   }
 
   renderList() {
-    const mainElement = document.querySelector('.main');
+    this.#listComponent = new ListView(this.#movies);
+    this.#filmsContainer = this.#listComponent.element.closest('.films');
     const moviesContainer = this.#filmsContainer.querySelector('.films-list__container');
 
-    render(mainElement, this.#listComponent, RenderPosition.BEFOREEND);
+    render(this.#main, this.#listComponent, RenderPosition.BEFOREEND);
 
     if (this.#movies.length) {
       this.#renderMovies(moviesContainer);
+      this.#renderExtras(this.#filmsContainer);
     }
   }
 }
