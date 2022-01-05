@@ -64,7 +64,7 @@ export default class MainPresenter {
     this.#movies = this.#movies.sort((a, b) => (a.release.diff(b.release)));
   }
 
-  #sortByRatting = () => {
+  #sortByRating = () => {
     this.#movies = this.#movies.sort((a, b) => (b.rating - a.rating));
   }
 
@@ -85,7 +85,7 @@ export default class MainPresenter {
         this.#sortByDate();
         break;
       case sortType.RATING:
-        this.#sortByRatting();
+        this.#sortByRating();
         break;
       default:
         return;
