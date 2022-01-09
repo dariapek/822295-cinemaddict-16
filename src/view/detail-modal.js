@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {createElement} from '../render';
-import AbstractView from './abstract';
 import {controlType} from '../const';
+import Smart from './smart';
 
 const getStringOfElements = (elements) => (elements.join(', '));
 
@@ -173,7 +173,11 @@ const createDetailModal = (movie, currentMovieComments) => {
             <div class="film-details__add-emoji-label"></div>
 
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+              <textarea
+                class="film-details__comment-input"
+                placeholder="Select reaction below and write comment here"
+                name="comment"
+              ></textarea>
             </label>
 
             <div class="film-details__emoji-list">
@@ -208,32 +212,32 @@ const createDetailModal = (movie, currentMovieComments) => {
   </section>`;
 };
 
-export default class DetailModalView extends AbstractView {
-  #_data = null;
+export default class DetailModalView extends Smart {
   #movie = null;
   #currentComments = null;
 
   constructor(movie = {}, comments = []) {
     super();
 
-    this.#_data = movie;
+    this._data = movie;
     this.#currentComments = this.getCurrentMovieComments(comments);
   }
 
   get template() {
-    return createDetailModal(this.#_data, this.#currentComments);
+    return createDetailModal(this._data, this.#currentComments);
   }
 
   update(value) {
     const {movie, comments} = value;
     this.#movie = movie;
-    this.#_data = this.#parseDataToMovie(movie);
+    this._data = this.#parseDataToMovie(movie);
     this.#currentComments = this.getCurrentMovieComments(comments);
     this.element = createElement(this.template);
+    this.restoreHandlers();
   }
 
   getCurrentMovieComments(allComments) {
-    const {commentsIds} = this.#_data;
+    const {commentsIds} = this._data;
 
     return allComments.filter((comment) => (commentsIds.includes(comment.id)));
   }
@@ -246,17 +250,23 @@ export default class DetailModalView extends AbstractView {
       .addEventListener('click', this.#closeHandler);
   }
 
-  #closeHandler = (evt) => {
-    evt.preventDefault();
-
-    this._callbacks.onCloseClick();
-  }
-
   setControlsClickHandler = (callback) => {
     this._callbacks.onModalControlsClick = callback;
     this.element
       .querySelector('.film-details__controls')
       .addEventListener('click', this.#controlsClickHandler);
+  }
+
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setControlsClickHandler(this._callbacks.onModalControlsClick);
+    this.setCloseHandler(this._callbacks.onCloseClick);
+  }
+
+  #closeHandler = (evt) => {
+    evt.preventDefault();
+
+    this._callbacks.onCloseClick();
   }
 
   #controlsClickHandler = (evt) => {
@@ -285,9 +295,28 @@ export default class DetailModalView extends AbstractView {
 
   #parseMovieToData = () => ({
     ...this.#movie,
-    commentsIds: this.#_data.commentsIds,
-    inWatchlist: this.#_data.inWatchlist,
-    isFavorite: this.#_data.isFavorite,
-    isWatched: this.#_data.isWatched,
+    commentsIds: this._data.commentsIds,
+    inWatchlist: this._data.inWatchlist,
+    isFavorite: this._data.isFavorite,
+    isWatched: this._data.isWatched,
   })
+
+  #emojiHandler = (evt) => {
+    const emoji = evt.target.value;
+
+    this.updateData({emoji});
+
+    const container = this.element.querySelector('.film-details__add-emoji-label');
+    const image = `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+    const newElement = createElement(image);
+    container.appendChild(newElement);
+  }
+
+  #setInnerHandlers = () => {
+    this.element
+      .querySelectorAll('.film-details__emoji-item')
+      .forEach((emoji) => {
+        emoji.addEventListener('click', this.#emojiHandler);
+      });
+  }
 }
