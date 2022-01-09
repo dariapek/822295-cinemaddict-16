@@ -44,9 +44,9 @@ export default class MovieListPresenter {
     this.#body.appendChild(modalElement);
   };
 
-  #closeModal = (modalElement) => {
+  #closeModal = () => {
     this.#body.classList.remove('hide-overflow');
-    this.#body.removeChild(modalElement);
+    this.#removeModal();
   };
 
   #renderModal = (movie, comments) => {
